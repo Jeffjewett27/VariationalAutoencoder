@@ -1,10 +1,10 @@
-import glob
-import imageio
+#import glob
+#import imageio
 import matplotlib.pyplot as plt
 import numpy as np
-import PIL
+#import PIL
 import tensorflow as tf
-import tensorflow_probability as tfp
+#import tensorflow_probability as tfp
 import time
 
 (train_images, _), (test_images, _) = tf.keras.datasets.mnist.load_data()
@@ -161,8 +161,8 @@ for epoch in range(1, epochs + 1):
         .format(epoch, elbo, end_time - start_time))
   generate_and_save_images(model, epoch, test_sample)
 
-def display_image(epoch_no):
-  return PIL.Image.open('image_at_epoch_{:04d}.png'.format(epoch_no))
+#def display_image(epoch_no):
+#  return PIL.Image.open('image_at_epoch_{:04d}.png'.format(epoch_no))
 
-plt.imshow(display_image(epoch))
-plt.axis('off')  # Display images
+#plt.imshow(display_image(epoch))
+#plt.axis('off')  # Display images
