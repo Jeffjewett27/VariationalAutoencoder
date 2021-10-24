@@ -1,5 +1,3 @@
-from IPython import display
-
 import glob
 import imageio
 import matplotlib.pyplot as plt
@@ -159,7 +157,6 @@ for epoch in range(1, epochs + 1):
   for test_x in test_dataset:
     loss(compute_loss(model, test_x))
   elbo = -loss.result()
-  display.clear_output(wait=False)
   print('Epoch: {}, Test set ELBO: {}, time elapse for current epoch: {}'
         .format(epoch, elbo, end_time - start_time))
   generate_and_save_images(model, epoch, test_sample)
