@@ -1,23 +1,14 @@
 import tensorflow as tf
+from tensorflow import keras
 import numpy as np
 
-def preprocess_images(images):
-  images = images.reshape((images.shape[0], 28, 28, 1)) / 255.
-  return np.where(images > .5, 1.0, 0.0).astype('float32')
-
 def get_mnist_data():
-  (train_images, _), (test_images, _) = tf.keras.datasets.mnist.load_data()
-
-  train_images = preprocess_images(train_images)
-  test_images = preprocess_images(test_images)
-
-  train_size = 60000
-  batch_size = 32
-  test_size = 10000
-
-  train_dataset = (tf.data.Dataset.from_tensor_slices(train_images)
-                  .shuffle(train_size).batch(batch_size))
-  test_dataset = (tf.data.Dataset.from_tensor_slices(test_images)
-                  .shuffle(test_size).batch(batch_size))
-
-  return train_dataset, test_dataset
+  (x_train, l_train), (x_test, l_test) = keras.datasets.mnist.load_data()
+  y_train = np.zeros((l_train.shape[0], l_train.max()+1), dtype=np.float32)
+  y_train[np.arange(l_train.shape[0]), l_train] = 1
+  y_test = np.zeros((l_test.shape[0], l_test.max()+1), dtype=np.float32)
+  y_test[np.arange(l_test.shape[0]), l_test] = 1
+  mnist_digits = np.concatenate([x_train, x_test], axis=0)
+  mnist_digits = np.expand_dims(mnist_digits, -1).astype("float32") / 255
+  mnist_labels = np.concatenate([y_train, y_test], axis=0)
+  return mnist_digits, mnist_labels
