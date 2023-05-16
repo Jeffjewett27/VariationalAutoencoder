@@ -5,6 +5,8 @@ from tensorflow import keras
 from tensorflow._api.v2 import data
 from tensorflow.keras import layers
 from tensorflow.keras import callbacks
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
 from tensorflow.keras.callbacks import ModelCheckpoint
 import numpy as np
 from datetime import datetime
@@ -19,7 +21,7 @@ from face_process import get_face_data
 tf.executing_eagerly()
 
 def get_face_encoder():
-  latent_dim = 12
+  latent_dim = 48
 
   encoder_inputs = keras.Input(shape=(128, 128, 3))
 
@@ -27,10 +29,10 @@ def get_face_encoder():
   m1 = layers.Conv2D(64, 3, activation="relu", strides=2, padding="same")(m1)
   m1 = layers.Conv2D(128, 3, activation="relu", strides=2, padding="same")(m1)
   m1 = layers.Flatten()(m1)
-  m1 = layers.Dense(16, activation="relu")(m1)
+  m1 = layers.Dense(64, activation="relu")(m1)
 
-  x = layers.Dense(32, activation="relu")(m1)
-  x = layers.Dense(16, activation="relu")(x)
+  x = layers.Dense(64, activation="relu")(m1)
+  x = layers.Dense(64, activation="relu")(x)
   z_mean = layers.Dense(latent_dim, name="z_mean")(x)
   z_log_var = layers.Dense(latent_dim, name="z_log_var")(x)
   z = VAESampling()([z_mean, z_log_var])
@@ -38,7 +40,7 @@ def get_face_encoder():
   return encoder
 
 def get_face_decoder():
-  latent_dim = 12
+  latent_dim = 48
 
   latent_inputs = keras.Input(shape=(latent_dim,), name="image")
 
@@ -118,6 +120,9 @@ def train_vae(vae, data, callbacks, prefix):
   vae.save_weights(os.path.join(directory, prefix + model_template.format(datestr)))
 
 if __name__ == "__main__":
+  config = ConfigProto()
+  config.gpu_options.allow_growth = True
+  session = InteractiveSession(config=config)
 
   dataset = get_face_data()
   datestr = datetime.now().strftime('%m-%d-%H-%M')

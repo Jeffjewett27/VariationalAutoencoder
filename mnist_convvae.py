@@ -5,6 +5,8 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras import callbacks
 from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
 import numpy as np
 from datetime import datetime
 from cvae import CVAE
@@ -86,6 +88,10 @@ def train_vae(vae, data, callbacks, prefix):
   vae.save_weights(os.path.join(directory, prefix + model_template.format(datestr)))
 
 if __name__ == "__main__":
+  config = ConfigProto()
+  config.gpu_options.allow_growth = True
+  session = InteractiveSession(config=config)
+
   iscvae = sys.argv[1] == "cvae"
 
   mnist_digits, mnist_labels = get_mnist_data()

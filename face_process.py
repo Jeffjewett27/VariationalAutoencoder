@@ -40,7 +40,7 @@ def split_datasets(dataset):
 
 def get_face_data():
     # List all the image files in the given directory.
-    list_ds = tf.data.Dataset.list_files( r'C:\Users\Owner\Datasets\utkcropped\*' , shuffle=True )
+    list_ds = tf.data.Dataset.list_files( r'/home/CS/users/jjewett/.linux/datasets/utkcropped/*.jpg' , shuffle=True )
     # Map `parse_image` method to all filenames.
     dataset = list_ds.map( parse_image , num_parallel_calls=tf.data.AUTOTUNE )
     #d1 = dataset.map(lambda a, b: a)
